@@ -1,375 +1,111 @@
-<!doctype html>
-<html lang="ur" dir="rtl">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coinera - Demo Original (Frontend)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coinera - Web Mining App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    /* Basic modern style - RTL Urdu */
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8;--success:#10b981}
-    *{box-sizing:border-box;font-family: 'Noto Nastaliq Urdu', 'Noto Sans Arabic', system-ui, sans-serif}
-    body{margin:0;background:linear-gradient(180deg,#071025 0%, #07182a 100%);color:#e6eef6}
-    .container{max-width:1100px;margin:24px auto;padding:18px}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-    h1{margin:0;font-size:20px}
-    nav button{margin-left:8px;background:none;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);margin-bottom:12px}
-    .grid{display:grid;grid-template-columns:1fr 320px;gap:12px}
-    .small{font-size:13px;color:var(--muted)}
-    label{display:block;margin-bottom:6px}
-    input,select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-    .btn{background:var(--accent);color:#042024;padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:right}
-    .muted{color:var(--muted)}
-    footer{color:var(--muted);font-size:13px;text-align:center;margin-top:18px}
-    .badge{background:rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px}
-    .danger{background:#ff4d4f;color:#fff;padding:6px 8px;border-radius:8px}
-    /* responsive */
-    @media(max-width:900px){.grid{grid-template-columns:1fr}nav{display:flex;flex-wrap:wrap;gap:6px}}
+    body { background: linear-gradient(135deg, #0f172a, #1e293b); color: #f1f5f9; }
+    .card { @apply bg-slate-800 p-4 rounded-2xl shadow-lg hover:shadow-2xl transition; }
+    .btn { @apply bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Coinera — میننگ / پلانس (Frontend)</h1>
-      <nav>
-        <button onclick="go('home')">ہوم</button>
-        <button onclick="go('mining')">Mining</button>
-        <button onclick="go('plans')">Plans</button>
-        <button onclick="go('deposit')">Deposit</button>
-        <button onclick="go('withdraw')">Withdraw</button>
-        <button onclick="go('referral')">Referral</button>
-        <button onclick="go('admin')">Admin</button>
-        <button id="authBtn" onclick="authAction()">سائن اپ / لاگ ان</button>
-      </nav>
-    </header>
+<body class="min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-slate-900 p-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-bold text-indigo-400">⚡ Coinera</h1>
+    <nav class="space-x-4">
+      <a href="#home" class="hover:text-indigo-300"><i class="fa fa-home"></i> Home</a>
+      <a href="#mining" class="hover:text-indigo-300"><i class="fa fa-bolt"></i> Mining</a>
+      <a href="#deposit" class="hover:text-indigo-300"><i class="fa fa-wallet"></i> Deposit</a>
+      <a href="#withdraw" class="hover:text-indigo-300"><i class="fa fa-money-bill"></i> Withdraw</a>
+      <a href="#plans" class="hover:text-indigo-300"><i class="fa fa-gem"></i> Plans</a>
+      <a href="#referral" class="hover:text-indigo-300"><i class="fa fa-users"></i> Referral</a>
+      <a href="#events" class="hover:text-indigo-300"><i class="fa fa-list"></i> Events</a>
+      <a href="#profile" class="hover:text-indigo-300"><i class="fa fa-user"></i> Profile</a>
+    </nav>
+  </header>
 
-    <main id="app">
-      <!-- Views will be injected here -->
-    </main>
+  <!-- Main Content -->
+  <main class="flex-1 p-6 space-y-8">
+    <!-- Home -->
+    <section id="home" class="card text-center">
+      <h2 class="text-2xl font-bold mb-2">Welcome to Coinera ⚡</h2>
+      <p class="text-slate-300">Mine virtual coins, deposit, withdraw, and earn via referrals & plans.</p>
+    </section>
 
-    <footer>یہ فائل GitHub Pages پر رکھ کر آپ براہِ راست چلا سکتے ہیں۔ (Front-end only — بعد میں Backend جوڑیں)</footer>
-  </div>
-
-<script>
-// Simple SPA with localStorage to simulate original app flows (signup, plans, commissions, referral)
-// IMPORTANT: یہ صرف فرنٹ اینڈ سیمولیشن ہے — حقیقی پیسہ یا حساس ڈیٹا کیلئے بیک اینڈ لازمی ہے.
-
-const STORAGE_KEY = 'quinera_data_v1';
-let state = loadState();
-let currentView = 'home';
-
-// Initialize default data if empty
-function loadState(){
-  let s = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-  if(!s){
-    s = {
-      users: [ {id: 'admin', name: 'Admin', email:'admin@local', password:'admin123', balance:0, isAdmin:true, referrals:[], plan:'free', kyc:false} ],
-      transactions: [],
-      plans: [
-        {id:'free', title:'Free', price:0, speed:1, adminCommissionPercent:0},
-        {id:'silver', title:'Silver', price:10, speed:2, adminCommissionPercent:20},
-        {id:'gold', title:'Gold', price:25, speed:5, adminCommissionPercent:20}
-      ],
-      depositCommissionPercent:5,
-      withdrawCommissionPercent:4,
-      referralLevels: [10,5,2], // percents
-      currentUserId: null
-    };
-    saveState(s);
-  }
-  return s;
-}
-function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); state = s; render(); }
-
-function go(view){ currentView = view; render(); window.scrollTo(0,0); }
-
-function authAction(){ if(state.currentUserId) logout(); else go('auth'); }
-function logout(){ state.currentUserId = null; saveState(state); alert('Logout ہوگیا'); }
-
-function findUser(id){ return state.users.find(u=>u.id===id); }
-
-function render(){
-  document.getElementById('authBtn').innerText = state.currentUserId ? 'لاگ آؤٹ' : 'سائن اپ/لاگ ان';
-  const app = document.getElementById('app');
-  if(currentView==='home') app.innerHTML = homeView();
-  else if(currentView==='auth') app.innerHTML = authView();
-  else if(currentView==='profile') app.innerHTML = profileView();
-  else if(currentView==='mining') app.innerHTML = miningView();
-  else if(currentView==='plans') app.innerHTML = plansView();
-  else if(currentView==='deposit') app.innerHTML = depositView();
-  else if(currentView==='withdraw') app.innerHTML = withdrawView();
-  else if(currentView==='referral') app.innerHTML = referralView();
-  else if(currentView==='admin') app.innerHTML = adminView();
-}
-
-// --- VIEWS ---
-function homeView(){
-  return `
-  <div class="card grid">
-    <div>
-      <h2>خوش آمدید</h2>
-      <p class="small">Coinera ویب ایپ — فیچرز: Sign up, Plans, Deposit, Withdraw, Referral, Admin Commission</p>
-      <div class="card">
-        <h3>تیز منِنگ پلان خریدیں</h3>
-        <p class="small">Free پلان صفر سے شروع — Paid پلان خرید کر mining speed بڑھائیں</p>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn" onclick="go('plans')">Plans دیکھیں</button>
-          <button class="btn" onclick="go('mining')">Mining شروع کریں</button>
-        </div>
+    <!-- Mining -->
+    <section id="mining" class="card">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-bolt text-yellow-400"></i> Mining</h2>
+      <p id="mining-balance">Balance: 0.0000 CNR</p>
+      <div class="w-full bg-slate-700 rounded-full h-3 my-3">
+        <div id="mining-progress" class="bg-green-400 h-3 rounded-full" style="width: 0%"></div>
       </div>
-      <div class="card">
-        <h3>اہم</h3>
-        <p class="small">یہ System ابھی Front-end پر کام کر رہا ہے۔ Deposit/Withdraw اور ادائیگیاں حقیقی بیک اینڈ کے بغیر محفوظ نہیں۔</p>
+      <button class="btn" onclick="startMining()">Start Mining</button>
+    </section>
+
+    <!-- Deposit -->
+    <section id="deposit" class="card">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-wallet text-green-400"></i> Deposit</h2>
+      <input type="number" id="deposit-amount" placeholder="Enter amount" class="p-2 rounded text-black" />
+      <button class="btn mt-2" onclick="deposit()">Deposit</button>
+    </section>
+
+    <!-- Withdraw -->
+    <section id="withdraw" class="card">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-money-bill text-red-400"></i> Withdraw</h2>
+      <input type="number" id="withdraw-amount" placeholder="Enter amount" class="p-2 rounded text-black" />
+      <button class="btn mt-2" onclick="withdraw()">Withdraw</button>
+    </section>
+
+    <!-- Plans -->
+    <section id="plans" class="grid md:grid-cols-3 gap-4">
+      <div class="card text-center">
+        <h3 class="text-lg font-bold">Free Plan</h3>
+        <p>Speed: x1</p>
+        <button class="btn mt-2" onclick="buyPlan('Free')">Select</button>
       </div>
-    </div>
-    <aside>
-      <div class="card">
-        <h3>Quick Stats</h3>
-        <p class="small">Users: <strong>${state.users.length}</strong></p>
-        <p class="small">Total Transactions: <strong>${state.transactions.length}</strong></p>
-        <p class="small">Deposit Commission %: <strong>${state.depositCommissionPercent}%</strong></p>
+      <div class="card text-center">
+        <h3 class="text-lg font-bold">Silver Plan</h3>
+        <p>Speed: x2</p>
+        <button class="btn mt-2" onclick="buyPlan('Silver')">Buy - $10</button>
       </div>
-      <div class="card">
-        <h3>ایکشن</h3>
-        <p class="small">اگر آپ Admin ہیں تو Admin پنل دیکھیں۔</p>
-        <button class="btn" onclick="go('admin')">Admin</button>
+      <div class="card text-center">
+        <h3 class="text-lg font-bold">Gold Plan</h3>
+        <p>Speed: x5</p>
+        <button class="btn mt-2" onclick="buyPlan('Gold')">Buy - $25</button>
       </div>
-    </aside>
-  </div>
-  `;
-}
+    </section>
 
-function authView(){
-  return `
-  <div class="card">
-    <h2>سائن اپ / لاگ ان</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <h4>نیا اکاؤنٹ بنائیں</h4>
-        <label>نام</label><input id="su_name" />
-        <label>ای میل</label><input id="su_email" />
-        <label>پاس ورڈ</label><input id="su_pwd" type="password" />
-        <label>ریفرل کوڈ (اگر ہے)</label><input id="su_ref" />
-        <div style="margin-top:8px"><button class="btn" onclick="signup()">سائن اپ</button></div>
-      </div>
-      <div>
-        <h4>لاگ ان</h4>
-        <label>ای میل</label><input id="li_email" />
-        <label>پاس ورڈ</label><input id="li_pwd" type="password" />
-        <div style="margin-top:8px"><button class="btn" onclick="login()">لاگ ان</button></div>
-        <p class="small muted">ایڈمن لاگ ان کے لیے: admin@local / admin123</p>
-      </div>
-    </div>
-  </div>
-  `;
-}
+    <!-- Referral -->
+    <section id="referral" class="card">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-users text-indigo-400"></i> Referral</h2>
+      <p>Your referral link:</p>
+      <input id="ref-link" class="p-2 w-full text-black" value="https://coinera.com/ref/12345" readonly />
+      <button class="btn mt-2" onclick="copyRef()">Copy Link</button>
+    </section>
 
-function profileView(){
-  const u = findUser(state.currentUserId);
-  if(!u) return `<div class='card'><p>نو یوزر لاگڈ ان — پہلے لاگ ان کریں</p></div>`;
-  return `
-  <div class='card grid'>
-    <div>
-      <h2>پروفائل — ${u.name}</h2>
-      <p class='small'>Balance: <strong>$${u.balance.toFixed(2)}</strong></p>
-      <p class='small'>Plan: <span class='badge'>${u.plan}</span> KYC: ${u.kyc? '<span class="badge">اپروو</span>':'<span class="muted">نا مکمل</span>'}</p>
-      <div style='margin-top:8px'>
-        <button class='btn' onclick="go('mining')">Mining Page</button>
-        <button class='btn' onclick="go('deposit')">Deposit</button>
-      </div>
-    </div>
-    <aside>
-      <div class='card'>
-        <h4>Referral</h4>
-        <p class='small'>آپ کا ریفرل کوڈ: <strong>${u.id}</strong></p>
-        <p class='small'>Referrals: ${u.referrals.length}</p>
-      </div>
-    </aside>
-  </div>
-  `;
-}
+    <!-- Events -->
+    <section id="events" class="card">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-list text-yellow-400"></i> Event Log</h2>
+      <ul id="event-log" class="text-sm space-y-1 max-h-40 overflow-y-auto"></ul>
+    </section>
 
-function miningView(){
-  const u = findUser(state.currentUserId);
-  const speed = u ? state.plans.find(p=>p.id===u.plan).speed : 1;
-  const calc = u? getMiningInfo(u): {rate:0,earned:0};
-  return `
-  <div class='card'>
-    <h2>میننگ اسکرین</h2>
-    <p class='small'>آپ کا پلان: ${u? u.plan : 'Guest'} — رفتار: <strong>${speed}x</strong></p>
-    <div style='display:flex;gap:8px;margin-top:8px'>
-      <button class='btn' onclick='startMining()'>Mining Start</button>
-      <button class='btn' onclick='stopMining()'>Stop</button>
-      <button class='btn' onclick="go('plans')">Upgrade</button>
-    </div>
-    <div style='margin-top:12px'>
-      <p class='small'>Live Estimate: <strong id='mineEstimate'>$${calc.earned.toFixed(4)}</strong></p>
-      <p class='small muted'>یہ estimate frontend پر localStorage کے ذریعے ہے — بیک اینڈ پر کنٹرول نہیں</p>
-    </div>
-  </div>
-  `;
-}
+    <!-- Profile -->
+    <section id="profile" class="card">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-user text-blue-400"></i> Profile</h2>
+      <p id="profile-info">User: Demo | Balance: 0 CNR</p>
+    </section>
+  </main>
 
-function plansView(){
-  let rows = state.plans.map(p=>{
-    return `<tr><td>${p.title}</td><td>$${p.price}</td><td>${p.speed}x</td><td>${p.adminCommissionPercent}%</td><td><button class='btn' onclick="buyPlan('${p.id}')">Buy</button></td></tr>`
-  }).join('');
-  return `
-  <div class='card'>
-    <h2>Plans</h2>
-    <table><thead><tr><th>پلان</th><th>قیمت</th><th>Speed</th><th>Admin Commission</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>
-    <p class='small muted'>پلان خریدنے پر Admin Commission بطور placeholder calculate ہو کر Admin ٹرانزیکشن میں جمع ہوگا</p>
-  </div>
-  `;
-}
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-center p-4 text-slate-400">
+    © 2025 Coinera. All rights reserved.
+  </footer>
 
-function depositView(){
-  return `
-  <div class='card'>
-    <h2>Deposit</h2>
-    <label>رقم ($)</label><input id='dep_amt' />
-    <p class='small'>Deposit Commission: ${state.depositCommissionPercent}%</p>
-    <div style='margin-top:8px'><button class='btn' onclick='makeDeposit()'>Deposit کریں</button></div>
-  </div>
-  `;
-}
-
-function withdrawView(){
-  return `
-  <div class='card'>
-    <h2>Withdraw</h2>
-    <label>رقم ($)</label><input id='wd_amt' />
-    <p class='small'>Withdraw Commission: ${state.withdrawCommissionPercent}%</p>
-    <div style='margin-top:8px'><button class='btn' onclick='makeWithdraw()'>Withdraw کریں</button></div>
-  </div>
-  `;
-}
-
-function referralView(){
-  const u = findUser(state.currentUserId);
-  return `
-  <div class='card'>
-    <h2>Referral System</h2>
-    <p class='small'>Multi-level Referral: ${state.referralLevels.join('% / ')}% (Levels)</p>
-    <p class='small'>آپ کا ریفرل کوڈ: <strong>${u? u.id : 'لاگ ان کریں'}</strong></p>
-    <p class='small'>Referrals اور Bonus UI placeholder — جب بیک اینڈ لگائیں گے تو Bonus auto add ہوگا</p>
-  </div>
-  `;
-}
-
-function adminView(){
-  const admin = findUser(state.currentUserId);
-  if(!admin || !admin.isAdmin) return `<div class='card'><p>صرف ایڈمن کے لیے — پہلے ایڈمن لاگ ان کریں (admin@local / admin123)</p></div>`;
-  const deposits = state.transactions.filter(t=>t.type!=='plan');
-  const planTx = state.transactions.filter(t=>t.type==='plan');
-  const totalAdmin = state.transactions.reduce((s,t)=> s + (t.adminCut||0),0);
-  const rows = state.users.map(u=>`<tr><td>${u.id}</td><td>${u.name}</td><td>$${u.balance.toFixed(2)}</td><td>${u.plan}</td></tr>`).join('');
-  const txRows = state.transactions.map(t=>`<tr><td>${t.type}</td><td>${t.user}</td><td>$${t.amount}</td><td>$${(t.adminCut||0).toFixed(2)}</td></tr>`).join('');
-  return `
-  <div class='card'>
-    <h2>Admin Panel</h2>
-    <p class='small'>Total Admin Commission: <strong>$${totalAdmin.toFixed(2)}</strong></p>
-    <h3>Users</h3>
-    <table><thead><tr><th>ID</th><th>Name</th><th>Balance</th><th>Plan</th></tr></thead><tbody>${rows}</tbody></table>
-    <h3 style='margin-top:12px'>Transactions</h3>
-    <table><thead><tr><th>Type</th><th>User</th><th>Amount</th><th>Admin Cut</th></tr></thead><tbody>${txRows}</tbody></table>
-  </div>
-  `;
-}
-
-// --- Actions ---
-function signup(){
-  const name = document.getElementById('su_name').value.trim();
-  const email = document.getElementById('su_email').value.trim();
-  const pwd = document.getElementById('su_pwd').value.trim();
-  const ref = document.getElementById('su_ref').value.trim();
-  if(!name||!email||!pwd){ alert('تمام فیلڈز بھریں'); return; }
-  const id = email.split('@')[0] + Math.floor(Math.random()*9000+1000);
-  const user = {id, name, email, password:pwd, balance:0, isAdmin:false, referrals:[], plan:'free', kyc:false};
-  state.users.push(user);
-  // handle referral link
-  if(ref){ const refUser = state.users.find(u=>u.id===ref); if(refUser){ refUser.referrals.push(id); /* give small bonus placeholder */ refUser.balance += 0.5; state.transactions.push({type:'referral', user:refUser.id, amount:0.5, adminCut:0}); }}
-  saveState(state);
-  alert('اکاؤنٹ بن گیا — براہ مہربانی لاگ ان کریں');
-}
-
-function login(){
-  const email = document.getElementById('li_email').value.trim();
-  const pwd = document.getElementById('li_pwd').value.trim();
-  const user = state.users.find(u=>u.email===email && u.password===pwd);
-  if(!user){ alert('یوزر نہیں ملا یا پاس ورڈ غلط'); return; }
-  state.currentUserId = user.id; saveState(state); go('profile');
-}
-
-function buyPlan(planId){
-  const u = findUser(state.currentUserId);
-  if(!u){ if(confirm('آپ لاگ ان نہیں ہیں۔ سائن اپ / لاگ ان کریں؟')) go('auth'); return; }
-  const plan = state.plans.find(p=>p.id===planId);
-  if(plan.price===0){ u.plan=planId; saveState(state); alert('Free پلان سیٹ ہوگیا'); return; }
-  if(u.balance < plan.price){ if(confirm('بیلنس کم ہے۔ کیا Deposit کرنا چاہتے ہیں؟')) go('deposit'); return; }
-  // charge user
-  u.balance -= plan.price;
-  u.plan = planId;
-  // admin commission
-  const adminCut = +(plan.price * (plan.adminCommissionPercent/100)).toFixed(2);
-  state.transactions.push({type:'plan', user:u.id, amount:plan.price, adminCut});
-  // credit admin user (store as transaction; admin balance not auto increased to keep visible) 
-  const admin = findUser('admin'); if(admin) admin.balance += adminCut;
-  saveState(state);
-  alert('پلان خرید لیا گیا');
-}
-
-function makeDeposit(){
-  const amt = parseFloat(document.getElementById('dep_amt').value||0);
-  const u = findUser(state.currentUserId);
-  if(!u){ if(confirm('لاگ ان کریں؟')) go('auth'); return; }
-  if(amt<=0){ alert('رقم درست کریں'); return; }
-  const adminCut = +(amt * (state.depositCommissionPercent/100)).toFixed(2);
-  const net = +(amt - adminCut).toFixed(2);
-  u.balance += net;
-  state.transactions.push({type:'deposit', user:u.id, amount:amt, adminCut});
-  const admin = findUser('admin'); if(admin) admin.balance += adminCut;
-  saveState(state);
-  alert('Deposit کامیاب: آپ کے اکاؤنٹ میں $'+net+' گیا (Admin cut $'+adminCut+')');
-}
-
-function makeWithdraw(){
-  const amt = parseFloat(document.getElementById('wd_amt').value||0);
-  const u = findUser(state.currentUserId);
-  if(!u){ if(confirm('لاگ ان کریں؟')) go('auth'); return; }
-  if(amt<=0 || amt>u.balance){ alert('رقم درست نہیں یا بیلنس کم ہے'); return; }
-  const adminCut = +(amt * (state.withdrawCommissionPercent/100)).toFixed(2);
-  const net = +(amt - adminCut).toFixed(2);
-  u.balance -= amt;
-  state.transactions.push({type:'withdraw', user:u.id, amount:amt, adminCut});
-  const admin = findUser('admin'); if(admin) admin.balance += adminCut;
-  saveState(state);
-  alert('Withdraw request simulated: آپ کو $'+net+' ملے (Admin cut $'+adminCut+')');
-}
-
-// Mining simulation
-let miningInterval = null;
-function startMining(){
-  const u = findUser(state.currentUserId);
-  if(!u){ if(confirm('لاگ ان کریں؟')) go('auth'); return; }
-  if(miningInterval) return alert('Already mining');
-  miningInterval = setInterval(()=>{
-    const plan = state.plans.find(p=>p.id===u.plan);
-    const perTick = 0.01 * (plan?plan.speed:1);
-    u.balance += perTick;
-    saveState(state);
-    document.getElementById('mineEstimate').innerText = '$'+u.balance.toFixed(4);
-  }, 2000);
-  alert('Mining شروع ہوگیا — ہر 2 سیکنڈ میں کم از کم کمائیں');
-}
-function stopMining(){ if(miningInterval){ clearInterval(miningInterval); miningInterval=null; alert('Mining روک دیا گیا'); } }
-
-function getMiningInfo(u){ const plan = state.plans.find(p=>p.id===u.plan); return {rate:0.01 * (plan?plan.speed:1), earned:u.balance}; }
-
-// initial render
-render();
-</script>
+  <!-- External JS -->
+  <script src="app.js"></script>
 </body>
 </html>
