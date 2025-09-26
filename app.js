@@ -1,3 +1,23 @@
+function signup(username, referrer = null) {
+  if (users[username]) {
+    alert("User already exists!");
+    return;
+  }
+  users[username] = { balance: 0, plan: "Free", miningSpeed: 1, referrals: [] };
+  if (referrer && users[referrer]) {
+    users[referrer].referrals.push(username);
+    let bonus = 1; // 1 CNR bonus
+    users[referrer].balance += bonus;
+    logEvent(`${referrer} got referral bonus ${bonus} CNR`);
+  }
+  saveUsers();
+  // ✅ Auto login after signup
+  currentUser = username;
+  localStorage.setItem("coinera_currentUser", username);
+  updateProfile();
+  logEvent(`${username} signed up & logged in`);
+  alert("Signup successful! You are now logged in.");
+}
 // -------------------------
 // Coinera - app.js
 // -------------------------
