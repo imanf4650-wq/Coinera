@@ -18,6 +18,7 @@
     <h1 class="text-xl font-bold text-indigo-400">⚡ Coinera</h1>
     <nav class="space-x-4">
       <a href="#home" class="hover:text-indigo-300"><i class="fa fa-home"></i> Home</a>
+      <a href="#auth" class="hover:text-indigo-300"><i class="fa fa-lock"></i> Auth</a>
       <a href="#mining" class="hover:text-indigo-300"><i class="fa fa-bolt"></i> Mining</a>
       <a href="#deposit" class="hover:text-indigo-300"><i class="fa fa-wallet"></i> Deposit</a>
       <a href="#withdraw" class="hover:text-indigo-300"><i class="fa fa-money-bill"></i> Withdraw</a>
@@ -34,6 +35,27 @@
     <section id="home" class="card text-center">
       <h2 class="text-2xl font-bold mb-2">Welcome to Coinera ⚡</h2>
       <p class="text-slate-300">Mine virtual coins, deposit, withdraw, and earn via referrals & plans.</p>
+    </section>
+
+    <!-- Authentication -->
+    <section id="auth" class="card text-center">
+      <h2 class="text-xl font-bold mb-2"><i class="fa fa-lock text-indigo-400"></i> Authentication</h2>
+      <!-- Signup -->
+      <div class="mb-4">
+        <input type="text" id="signup-username" placeholder="Enter new username" class="p-2 rounded text-black" />
+        <button class="btn mt-2"
+          onclick="signup(document.getElementById('signup-username').value, localStorage.getItem('coinera_ref'))">
+          Sign Up
+        </button>
+      </div>
+      <!-- Login -->
+      <div>
+        <input type="text" id="login-username" placeholder="Enter username" class="p-2 rounded text-black" />
+        <button class="btn mt-2"
+          onclick="login(document.getElementById('login-username').value)">
+          Log In
+        </button>
+      </div>
     </section>
 
     <!-- Mining -->
@@ -105,7 +127,7 @@
     © 2025 Coinera. All rights reserved.
   </footer>
 
-  <!-- External JS -->
+  <!-- App Logic -->
   <script src="app.js"></script>
 </body>
 </html>
